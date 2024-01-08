@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -22,6 +22,11 @@
         button {
             margin: 5px;
             font-size: 16px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
         }
     </style>
 </head>
@@ -49,8 +54,8 @@
 <div id="equipment" class="card">
     <div class="card-content">
         <h2>Equipment</h2>
-        <p>Weapon: <span id="weapon">Wooden Sword</span> <button class="btn" onclick="craftWeapon()">Craft</button></p>
-        <p>Armor: <span id="armor">Leather Armor</span> <button class="btn" onclick="craftArmor()">Craft</button></p>
+        <p>Weapon: <span id="weapon">Wooden Sword</span> <img src="path/to/wooden_sword_image.jpg" alt="Wooden Sword Image"><button class="btn" onclick="craftWeapon()">Craft</button></p>
+        <p>Armor: <span id="armor">Leather Armor</span> <img src="path/to/leather_armor_image.jpg" alt="Leather Armor Image"><button class="btn" onclick="craftArmor()">Craft</button></p>
     </div>
 </div>
 
@@ -68,9 +73,17 @@
         <h2>Crafting</h2>
         <p>Crafting Materials: <span id="craftingMaterials">0</span></p>
         <button class="btn" onclick="craftWeapon('Iron Sword', 10)">Craft Iron Sword</button>
+        <img src="path/to/iron_sword_image.jpg" alt="Iron Sword Image">
         <button class="btn" onclick="craftWeapon('Steel Sword', 20)">Craft Steel Sword</button>
+        <img src="path/to/steel_sword_image.jpg" alt="Steel Sword Image">
+        <button class="btn" onclick="craftWeapon('Silver Sword', 30)">Craft Silver Sword</button>
+        <img src="path/to/silver_sword_image.jpg" alt="Silver Sword Image">
         <button class="btn" onclick="craftArmor('Iron Armor', 10)">Craft Iron Armor</button>
+        <img src="path/to/iron_armor_image.jpg" alt="Iron Armor Image">
         <button class="btn" onclick="craftArmor('Steel Armor', 20)">Craft Steel Armor</button>
+        <img src="path/to/steel_armor_image.jpg" alt="Steel Armor Image">
+        <button class="btn" onclick="craftArmor('Silver Armor', 30)">Craft Silver Armor</button>
+        <img src="path/to/silver_armor_image.jpg" alt="Silver Armor Image">
     </div>
 </div>
 
