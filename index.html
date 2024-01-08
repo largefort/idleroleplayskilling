@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idle RPG Incremental Game</title>
+
+    <!-- Materialize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        button {
+            margin: 5px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body class="container">
+
+<h1 class="center-align">Idle RPG Incremental Game</h1>
+
+<div id="stats" class="card">
+    <div class="card-content">
+        <h2>Character Stats</h2>
+        <p>Level: <span id="level">1</span></p>
+        <p>Experience: <span id="experience">0</span></p>
+    </div>
+</div>
+
+<div id="skills" class="card">
+    <div class="card-content">
+        <h2>Skills</h2>
+        <p>Attack: <span id="attack">1</span></p>
+        <p>Defense: <span id="defense">1</span></p>
+        <p>Magic: <span id="magic">1</span></p>
+    </div>
+</div>
+
+<div id="equipment" class="card">
+    <div class="card-content">
+        <h2>Equipment</h2>
+        <p>Weapon: <span id="weapon">Wooden Sword</span> <button class="btn" onclick="craftWeapon()">Craft</button></p>
+        <p>Armor: <span id="armor">Leather Armor</span> <button class="btn" onclick="craftArmor()">Craft</button></p>
+    </div>
+</div>
+
+<div id="enemies" class="card">
+    <div class="card-content">
+        <h2>Enemies</h2>
+        <button class="btn" onclick="attackEnemy()">Attack Enemy</button>
+        <p>Enemy Level: <span id="enemyLevel">1</span></p>
+        <p>Enemy Health: <span id="enemyHealth">100</span></p>
+    </div>
+</div>
+
+<div id="crafting" class="card">
+    <div class="card-content">
+        <h2>Crafting</h2>
+        <p>Crafting Materials: <span id="craftingMaterials">0</span></p>
+        <button class="btn" onclick="craftWeapon('Iron Sword', 10)">Craft Iron Sword</button>
+        <button class="btn" onclick="craftWeapon('Steel Sword', 20)">Craft Steel Sword</button>
+        <button class="btn" onclick="craftArmor('Iron Armor', 10)">Craft Iron Armor</button>
+        <button class="btn" onclick="craftArmor('Steel Armor', 20)">Craft Steel Armor</button>
+    </div>
+</div>
+
+<button class="btn" onclick="train()">Train</button>
+
+<!-- Materialize JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+<script>
+    // Load game data from local storage or use default values
+    let gameData = JSON.parse(localStorage.getItem('idleRPG')) || {
+        level: 1,
+        experience: 0,
+        attack: 1,
+        defense: 1,
+        magic: 1,
+        weapon: "Wooden Sword",
+        armor: "Leather Armor",
+        enemyLevel: 1,
+        enemyHealth: 100,
+        craftingMaterials: 0
+    };
+
+    function train() {
+        gameData.experience += 10;
+        updateStats();
+        saveGame();
+    }
+
+    function attackEnemy() {
+        const damage = calculateDamage();
+        gameData.enemyHealth -= damage;
+
+        if (gameData.enemyHealth <= 0) {
+            defeatEnemy();
+        }
+
+        updateEnemyStats();
+        saveGame();
+    }
+
+    function calculateDamage() {
+        return Math.floor(Math.random() * gameData.attack);
+    }
+
+    function defeatEnemy() {
+        gameData.experience += 20;
+        gameData.enemyLevel++;
+        gameData.enemyHealth = 100;
+
+        alert('You defeated the enemy! Earned 20 experience.');
+
+        updateStats();
+        updateEnemyStats();
+        saveGame();
+    }
+
+    function updateStats() {
+        document.getElementById('level').innerText = gameData.level;
+        document.getElementById('experience').innerText = gameData.experience;
+
+        if (gameData.experience >= gameData.level * 100) {
+            levelUp();
+        }
+
+        document.getElementById('attack').innerText = gameData.attack;
+        document.getElementById('defense').innerText = gameData.defense;
+        document.getElementById('magic').innerText = gameData.magic;
+
+        document.getElementById('weapon').innerText = gameData.weapon;
+        document.getElementById('armor').innerText = gameData.armor;
+
+        document.getElementById('craftingMaterials').innerText = gameData.craftingMaterials;
+    }
+
+    function updateEnemyStats() {
+        document.getElementById('enemyLevel').innerText = gameData.enemyLevel;
+        document.getElementById('enemyHealth').innerText = gameData.enemyHealth;
+    }
+
+    function levelUp() {
+        gameData.level++;
+        gameData.attack++;
+        gameData.defense++;
+        gameData.magic++;
+
+        alert('Level Up! You are now level ' + gameData.level);
+
+        updateStats();
+        saveGame();
+    }
+
+    function craftWeapon(newWeapon, cost) {
+        if (gameData.craftingMaterials >= cost) {
+            gameData.craftingMaterials -= cost;
+            gameData.weapon = newWeapon;
+            gameData.attack += calculateCraftingBonus(cost);
+
+            alert('Crafted ' + newWeapon + '!');
+
+            updateStats();
+            saveGame();
+        } else {
+            alert('Not enough crafting materials. Train to gather more materials.');
+        }
+    }
+
+    function craftArmor(newArmor, cost) {
+        if (gameData.craftingMaterials >= cost) {
+            gameData.craftingMaterials -= cost;
+            gameData.armor = newArmor;
+            gameData.defense += calculateCraftingBonus(cost);
+
+            alert('Crafted ' + newArmor + '!');
+
+            updateStats();
+            saveGame();
+        } else {
+            alert('Not enough crafting materials. Train to gather more materials.');
+        }
+    }
+
+    function calculateCraftingBonus(cost) {
+        return Math.floor(cost / 10);
+    }
+
+    // Introduce crafting materials over time
+    setInterval(function() {
+        gameData.craftingMaterials += 1;
+        updateStats();
+        saveGame();
+    }, 5000); // Craft every 5 seconds
+
+    function saveGame() {
+        // Save game data to local storage
+        localStorage.setItem('idleRPG', JSON.stringify(gameData));
+    }
+
+    // Initial update
+    document.addEventListener('DOMContentLoaded', function() {
+        updateStats();
+        updateEnemyStats();
+    });
+</script>
+
+</body>
+</html>
